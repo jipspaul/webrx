@@ -32,23 +32,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <link rel='stylesheet' href='../css/common.css'>
 
   <title>User Agent Prompts</title>
+  <style>
+    body {
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    img.logo {
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+    header {
+      max-width: 800px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
-
 <body>
+  <img src="../media/logo/logo.jpg" alt="Logo" class="logo">
   <header>
     <details open>
-      <summary>User Agent Prompts</summary>
-      <p>
-        Tests requesting various prompts (PWA install, permission requests, notifications) from within XR.
-        Demonstrates how the UA handles those prompts, if at all.
-        <a class="back" href="./">Back</a>
-      </p>
+
     </details>
   </header>
-  <video width="640" height="360" controls autoplay>
-    <source src="https://d25a56pc18k0co.cloudfront.net/sloths_binaural_3840_180_3D-injected.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
   <script type="module">
     import { WebXRSampleApp } from '../js/webxr-sample-app.js';
     import { UrlTexture } from '../js/render/core/texture.js';
@@ -193,89 +205,60 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       {
         icon: '../media/textures/microphone-button.png',
         callback: (success, fail) => {
-          navigator.mediaDevices?.getUserMedia?.({ audio: true })
-            .then(success, fail);
+      
         }
       },
       {
         icon: '../media/textures/camera-button.png',
         callback: (success, fail) => {
-          navigator.mediaDevices?.getUserMedia?.({ video: true })
-            .then(success, fail);
+
         }
       },
       {
         icon: '../media/textures/screenshare-button.png',
         callback: (success, fail) => {
-          navigator.mediaDevices?.getDisplayMedia?.()
-            .then(success, fail);
+ 
         }
       },
       {
         icon: '../media/textures/location-button.png',
         callback: (success, fail) => {
-          navigator.geolocation?.getCurrentPosition?.(success, fail);
         }
       },
       {
         icon: '../media/textures/notifications-button.png',
         callback: (success, fail) => {
-          window.Notification?.requestPermission?.(outcome => {
-            switch (outcome) {
-              case 'granted':
-                success();
-                addPermissionButton('../media/textures/show-notification-button.png', showNotification, 0, 1.18);
-                break;
-              case 'denied':
-                fail();
-                break;
-              case 'default':
-                // If permission prompt is closed or ignored,
-                // the outcome value is `default`, and permission can be requested again.
-                // https://notifications.spec.whatwg.org/#permission-model
-                break;
-            }
-          })
+
         }
       },
       {
         icon: '../media/textures/bluetooth-button.png',
         callback: (success, fail) => {
-          navigator.bluetooth?.requestDevice?.({
-            // filters: [...] <- Prefer filters to save energy & show relevant devices.
-            // acceptAllDevices here ensures dialog can populate, we don't care with what.
-            acceptAllDevices: true
-          })
-            .then(device => device.gatt.connect())
-            .then(success, fail);
+     
         }
       },
       {
         icon: '../media/textures/usb-button.png',
         callback: (success, fail) => {
-          navigator.usb?.requestDevice?.({ filters: [{}] })
-            .then(success, fail);
+          
         }
       },
       {
         icon: '../media/textures/hid-button.png',
         callback: (success, fail) => {
-          navigator.hid?.requestDevice?.({ filters: [] })
-            .then(devices => { devices.length > 0 ? success() : fail() });
+ 
         }
       },
       {
         icon: '../media/textures/midi-button.png',
         callback: (success, fail) => {
-          navigator.requestMIDIAccess?.({ sysex: true })
-            .then(success, fail);
+
         }
       },
       {
         icon: '../media/textures/serial-button.png',
         callback: (success, fail) => {
-          navigator.serial?.requestPort?.({ filters: [] })
-            .then(success, fail);
+   
         }
       },
     ]);

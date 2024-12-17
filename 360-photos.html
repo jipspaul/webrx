@@ -28,10 +28,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <link rel='icon' type='image/png' sizes='32x32' href='favicon-32x32.png'>
     <link rel='icon' type='image/png' sizes='96x96' href='favicon-96x96.png'>
     <link rel='stylesheet' href='css/common.css'>
-
-    <title>360 Photos</title>
+    <style>
+      body {
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+      }
+      img.logo {
+        max-width: 400px;
+        margin-bottom: 20px;
+      }
+      header {
+        max-width: 800px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+    </style>
   </head>
   <body>
+    <img src="../media/logo/logo.jpg" alt="Logo" class="logo">
     <header>
       <details open>
         <summary>360 Photos</summary>
