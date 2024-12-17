@@ -265,7 +265,7 @@ export class CubeSeaNode extends Node {
     // not recommended for viewing in a headset.
     this.autoRotate = !!options.autoRotate;
 
-    this._texture = new UrlTexture(options.imageUrl || 'media/textures/cube-sea.png');
+    this._texture = new UrlTexture(options.imageUrl || 'media/textures/cube-sea.jpg');
     this._material = new CubeSeaMaterial();
     this._material.baseColor.texture = this._texture;
     this._material.depthColor.texture = new ExternalTexture("scene_depth");

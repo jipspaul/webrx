@@ -41,6 +41,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         </p>
       </details>
     </header>
+    <video id="video360" controls>
+      <source src="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_5.7k_30s_360_h265_crf23_binaural_CREDIT_JON_GRIFFITH_injected.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+  </video>
     <script type="module">
       import {WebXRSampleApp} from '../js/webxr-sample-app.js';
       import {Gltf2Node} from '../js/render/nodes/gltf2.js';
@@ -63,9 +67,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       let exitTexture = new UrlTexture('../media/textures/x-button.png');
       let exitButton = new ButtonNode(exitTexture, () => {
-        if (app.session) {
-          app.session.end();
-        }
+        window.onload = function() {
+            let video = document.getElementById('video360');
+            video.play();
+        };
       });
       exitButton.translation = [0, 1.2, -0.65];
       app.scene.addNode(exitButton);

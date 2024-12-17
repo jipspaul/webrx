@@ -1,69 +1,40 @@
-<!doctype html>
-<!--
-Copyright 2021 The Immersive Web Community Group
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+<!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
-  <meta name='mobile-web-app-capable' content='yes'>
-  <meta name='apple-mobile-web-app-capable' content='yes'>
-  <link rel='icon' type='image/png' sizes='32x32' href='../favicon-32x32.png'>
-  <link rel='icon' type='image/png' sizes='96x96' href='../favicon-96x96.png'>
-  <link rel='stylesheet' href='../css/common.css'>
-
-  <title>Equirect Layer</title>
-  <!-- Stereo layer dependency -->
-  <script src="../js/wglu/wglu-program.js"></script>
-  <script src="../js/wglu/wglu-url.js"></script>
-  <script src="../js/stereo-util.js"></script>
-</head>
-
-<body>
-  <header style="max-width: 800px;">
-    <details open>
-      <summary>Equirect Video</summary>
-      <p>
-        This sample shows how to show 180/360 video via an equirect layer, with
-        the addition of media control bar that enables fast forward/rewind,
-        pause/play and exit. It can be used for rendering static backgrounds like cube
-        layers, as demonstrated in the Equirect Layer example, but the real edge
-        of using equirect layers over cube layers is to show immersive video.
-      </p>
-      <p>
-        NOTE: Depending on your internet connection, the fast forward and rewind
-        buttons may not immediately take effect.
-      </p>
-        <a class="back" href="./index.html">Back</a>
-      </p>
-      <!-- Hide video selection drop down until more videos are available -->
-      <label style="visibility: hidden;">Choose a video</label>
-      <select id="eqrtVideoSelect" style="visibility: hidden;">
-        <option value="https://d25a56pc18k0co.cloudfront.net/sloths_binaural_3840_180_3D-injected.mp4"
-          data-video-width=3840 data-video-height=1920 data-video-layout="stereo-left-right" data-video-angle=180 data-video-fps=30>
-          stereo-left-right 180 3840x1920 30fps
-        </option>
-      </select><br />
-    </details>
-  </header>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
+    <meta name='mobile-web-app-capable' content='yes'>
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+    <link rel='icon' type='image/png' sizes='32x32' href='../favicon-32x32.png'>
+    <link rel='icon' type='image/png' sizes='96x96' href='../favicon-96x96.png'>
+    <link rel='stylesheet' href='../css/common.css'>
+    <title>WebXR Media Layers</title>
+    <style>
+      body {
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+      }
+      img.logo {
+        max-width: 400px;
+        margin-bottom: 20px;
+      }
+      header {
+        max-width: 800px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="../media/logo/logo.jpg" alt="Logo" class="logo">
+    <button id="xr-button" disabled>XR not found</button>
+  </header hidden>
   <main style='text-align: center;'>
     <p>Click 'Enter VR' to see content</p>
   </main>

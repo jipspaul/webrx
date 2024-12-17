@@ -1,22 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evisel Promo</title>
-</head>
-<body>
-    <main style='text-align: center;'>
-        <video id="video" controls>
-            <source src="https://firebasestorage.googleapis.com/v0/b/jeli-a53be.appspot.com/o/video_promo.mp4?alt=media&token=cec43fce-8dbf-42f0-9cba-1ec2801cd2c7" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </main>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
+    <meta name='mobile-web-app-capable' content='yes'>
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+    <link rel='icon' type='image/png' sizes='32x32' href='../favicon-32x32.png'>
+    <link rel='icon' type='image/png' sizes='96x96' href='../favicon-96x96.png'>
+    <link rel='stylesheet' href='../css/common.css'>
+    <title>WebXR Media Layers</title>
+    <style>
+      body {
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+      }
+      img.logo {
+        max-width: 400px;
+        margin-bottom: 20px;
+      }
+      header {
+        max-width: 800px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="../media/logo/logo.jpg" alt="Logo" class="logo">
+    <button id="xr-button" disabled>XR not found</button>
+    <header hidden >
+      <details open >
+      <select id="videoselect" hidden>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_4.3k_30s_360_h264_crf23_binaural_CREDIT_JON_GRIFFITH_injected.mp4">4.3K H.264 crf23 360</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_5.7k_30s_360_h265_crf23_binaural_CREDIT_JON_GRIFFITH_injected.mp4">5.7K H.265 crf23 360</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_6.2k_30s_180_SBS_h264_crf27_binaural_CREDIT_JON_GRIFFITH_v2.mp4">6.2K H.264 crf27 180 side-by-side</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_6.2k_30s_180_TB_h264_crf27_CREDIT_JON_GRIFFITH-injected.mp4">6.2K H.264 crf27 180 top-bottom</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_8k_30s_180_SBS_h265_crf23_binaural_CREDIT_JON_GRIFFITH-injected.mp4">8K H.265 crf23 180 side-by-side</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_8k_30s_180_TB_h265_crf23_binaural_CREDIT_JON_GRIFFITH-injected.mp4">8K H.265 crf23 180 top-bottom</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_30s_180_SBS_vp8_crf23_binaural_CREDIT_JON_GRIFFITH-injected.webm">VP8 crf23 180 side-by-side</option>
+        <option value="https://oculus-mp4.s3.amazonaws.com/immersive+video+8K+for+Oculus+Browser/everestvr_4k_30s_180_SBS_av1_crf23_binaural_CREDIT_JON_GRIFFITH-injected.mp4">8K AV1 crf23 180 side-by-side</option>
+      </select>
     <script>
-        window.onload = function() {
-            let video = document.getElementById('video');
-            video.play();
-        };
+            window.addEventListener('load', async () => {
+              if (navigator.xr) {
+                try {
+                    console.log('WebXR supported');
+                  const session = await navigator.xr.requestSession('immersive-vr');
+                  onSessionStarted(session);
+                } catch (e) {
+                  console.error('Failed to start XR session:', e);
+                }
+              } else {
+                console.log('WebXR not supported');
+              }
+            });
+      
+            function onSessionStarted(session) {
+              // Your code to handle the XR session
+              console.log('XR session started');
+            }
     </script>
-</body>
+    </main>
+    <script src="https://immersive-web.github.io/webxr-layers-polyfill/build/webxr-layers-polyfill.js"></script>
+    <script>
+      (function () {
+      'use strict';
+
+      // initialize the polyfill for unsupported devices
+      let layersPolyfill = new WebXRLayersPolyfill()
+
+      // XR globals.
+      let xrButton = document.getElementById('xr-button');
+      let xrSession = null;
+      let xrRefSpace = null;
+      let xrMediaFactory = null;
+      let cylinder_layer = false;
+
+      let video = document.createElement('video');
+      video.loop = false;
+      video.crossOrigin = "anonymous";
+      video.preload = 'auto';
+      video.autoload = true;
+      function buttonPressedThisFrame(gamepad, index) {
+        return (index < gamepad.buttons.length &&
+          gamepad.buttons[index].pressed);
+      }
+      function videoSelect() {
+        let s = document.getElementById("videoselect");
+        video.src = s.options[s.selectedIndex].value;
+        xrButton.textContent = 'Loading video';
+        xrButton.disabled = true;
+      }
+
+      video.oncanplaythrough = (event) => {
+        xrButton.disabled = false;
+        xrButton.textContent = 'Enter XR';
+      }
+
+      video.onerror = (event) => {
+        xrButton.disabled = true;
+        xrButton.textContent = 'Can\'t play video' + video.error.message;
+      };
+
+      videoSelect();
+      document.getElementById("videoselect").addEventListener('change', (event) => {
+        videoSelect();
+      });
+
+      // Checks to see if WebXR is available and, if so, requests an XRDevice
+      // that is connected to the system and tests it to ensure it supports the
+      // desired session options.
+      function initXR() {
+        // Is WebXR available on this UA?
+        if (navigator.xr) {
+          // If the device allows creation of exclusive sessions set it as the
+          // target of the 'Enter XR' button.
+          navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+            if (supported) {
+              // Updates the button to start an XR session when clicked.
+              xrButton.addEventListener('click', onButtonClicked);
+              xrButton.disabled = video.readyState > 2;
+            }
+          });
+        }
+      }
+
+      // Called when the user clicks the button to enter XR. If we don't have a
+      // session we'll request one, and if we do have a session we'll end it.
+      function onButtonClicked() {
+        if (!xrSession) {
+          navigator.xr.requestSession('immersive-vr', {requiredFeatures: ['layers']}).then(onSessionStarted);
+          video.play();
+        } else {
+          xrSession.end();
+        }
+      }
+
+      // Called when we've successfully acquired a XRSession. In response we
+      // will set up the necessary session state and kick off the frame loop.
+      function onSessionStarted(session) {
+        xrSession = session;
+        xrButton.textContent = 'Exit VR';
+
+        // Listen for the sessions 'end' event so we can respond if the user
+        // or UA ends the session for any reason.
+        session.addEventListener('end', onSessionEnded);
+
+        xrMediaFactory = new XRMediaBinding(session);
+
+        session.requestReferenceSpace('local').then((refSpace) => {
+        xrRefSpace = refSpace;
+
+        let angle = Math.PI;
+        if (!video.src.includes("180"))
+          angle = Math.PI*2;
+
+        let layout = "stereo-top-bottom";
+        if (video.src.includes("sbs")||video.src.includes("SBS"))
+          layout = "stereo-left-right";
+
+        let layer = xrMediaFactory.createEquirectLayer(video, {space: refSpace, centralHorizontalAngle: angle, layout: layout});
+        // let layer = xrMediaFactory.createEquirectLayer(video, {space: refSpace});
+        session.updateRenderState({ layers: [ layer ] });
+
+          // Inform the session that we're ready to begin drawing.
+        session.requestAnimationFrame(onXRFrame);
+        });
+      }
+
+      // Called either when the user has explicitly ended the session by calling
+      // session.end() or when the UA has ended the session for any reason.
+      // At this point the session object is no longer usable and should be
+      // discarded.
+      function onSessionEnded(event) {
+        xrSession = null;
+        xrButton.textContent = 'Enter VR';
+        video.pause();
+      }
+
+      // Called every time the XRSession requests that a new frame be drawn.
+      function onXRFrame(time, frame) {
+        let session = frame.session;
+
+        // Inform the session that we're ready for the next frame.
+        session.requestAnimationFrame(onXRFrame);
+
+        let force_mono = false;
+        for (let source of session.inputSources) {
+          if (source.gamepad) {
+            // Toggle Play/Pause on primary button press
+            if (buttonPressedThisFrame(source.gamepad, 0)) {
+              video.currentTime = 0;
+              video.play();
+            } else if (buttonPressedThisFrame(source.gamepad, 1)) {
+              if (video.paused)
+                video.play();
+              else
+                video.pause();
+            }
+            force_mono |= buttonPressedThisFrame(source.gamepad, 4);
+          }
+        }
+        xrSession.renderState.layers[0].forceMonoPresentation = force_mono;
+      }
+
+      // Start the XR application.
+      initXR();
+
+    })();
+    </script>
+  </body>
 </html>
